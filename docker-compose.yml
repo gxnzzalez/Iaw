@@ -1,0 +1,11 @@
+services:
+  Apache:
+    image: ubuntu/apache2:latest
+    container_name: nimbus_doc
+    
+    ports:
+      - "2007:80"
+    volumes:
+      - ./html.marcas:/var/www/html
+      - ./configuracion.virtualhost:/etc/apache2/sites-available/
+    restart: unless-stopped
