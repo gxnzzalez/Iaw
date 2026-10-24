@@ -8,7 +8,7 @@ services:
     volumes:
       - ./html:/var/www/html
       - ./configuracion.virtualhost:/etc/apache2/sites-available/
-      - ./configuracion.virtualhost/ports.conf:/etc/apache2/ports.conf:ro
+      - ./ports/ports.conf:/etc/apache2/ports.conf:ro
     restart: unless-stopped
 
   proxy-nginx:
