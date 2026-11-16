@@ -13,7 +13,7 @@ $mensaje = $_GET['mensaje'] ?? '';
     <p class="nota">📨 Saludo de <b><?= e($nombre) ?></b>: «<?= e($mensaje) ?>». ¡Lo leemos en antena!</p>
   <?php endif; ?>
   <form method="get">
-    <label>Tu nombre <input name="nombre" value="<?= e($nombre) ?>"></label>
+    <label>Tu nombre <input name="nombre" value="<<?= htmlspecialchars($saludo, ENT_QUOTES, 'UTF-8') ?>>"></label>
     <label>Tu saludo <input name="mensaje" size="50"></label>
     <button>Enviar</button>
   </form>
