@@ -26,13 +26,29 @@ PODCASTS_DE_PRUEBA = [
 # ✍️ C2 · La conexión con MariaDB (UD6, apartado 5.2): host, base, usuario y contraseña, del entorno (radio.env).
 #         Cada fila, un diccionario. Nada escrito a mano.
 def conectar():
-    raise RuntimeError("Sin hacer: conectar() (C2)")
+    return pymysql.connect(
+        host=os.environ["DB_HOST"],
+        user=os.environ["DB_USER"],
+        password=os.environ["DB_PASS"],
+        database=os.environ["DB_NAME"],
+        cursorclass=pymysql.cursors.DictCursor
+    )
 
 
 # ✍️ C3 · Los podcasts de la tabla podcasts, del más nuevo al más viejo, con id, titulo, programa y minutos.
 #         Si buscar no está vacío, solo los que lo llevan en el título (LIKE). Lo escribe el oyente: consulta preparada.
 def leer_podcasts(buscar=""):
-    return [p for p in PODCASTS_DE_PRUEBA if buscar.lower() in p["titulo"].lower()]
+    db = conectar()
+    with db.cursor() as cursor:
+        if buscar:
+            query = "SELECT id, titulo, programa, minutos FROM podcasts WHERE titulo LIKE %s ORDER BY fecha DESC"
+            cursor.execute(query, ("%" + buscar + "%",))
+        else:
+            query = "SELECT id, titulo, programa, minutos FROM podcasts ORDER BY fecha DESC"
+            cursor.execute(query)
+        resultados = cursor.fetchall()
+    db.close()
+    return resultados
 
 
 @app.route("/api/salud")

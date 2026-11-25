@@ -24,5 +24,16 @@ function leer_env(string $fichero): array
 //         En este fichero no puede quedar escrita ninguna contraseña.
 function conectar(): PDO
 {
-    throw new RuntimeException('Sin hacer: conectar() (C2)');
+    $env = leer_env('/etc/radio/radio.env');
+    $host = $env['DB_HOST'] ?? 'localhost';
+    $db = $env['DB_NAME'] ?? 'radio';
+    $user = $env['DB_USER'] ?? 'radio_web';
+    $pass = $env['DB_PASS'] ?? '';
+
+    $dsn = "mysql:host=$host;dbname=$db;charset=utf8mb4";
+    
+    return new PDO($dsn, $user, $pass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    ]);
 }
